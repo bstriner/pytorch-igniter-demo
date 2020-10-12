@@ -1,0 +1,2 @@
+pytorch-igniter==0.0.29
+aws-sagemaker-remote==0.0.30
