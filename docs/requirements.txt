@@ -1,5 +1,5 @@
-
-pytorch-igniter
+aws-sagemaker-remote==0.0.33
+pytorch-igniter==0.0.34
 pyyaml
 mlflow
 sagemaker
@@ -7,7 +7,6 @@ tqdm
 torch
 torchvision
 sphinx
-aws-sagemaker-remote
 sphinx_rtd_theme
 sphinx-argparse
 pillow

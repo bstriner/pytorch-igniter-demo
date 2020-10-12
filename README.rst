@@ -36,18 +36,18 @@ Local usage
 
    # Upload local model
    aws-sagemaker-remote upload output/model pytorch-igniter-demo/model.tar.gz --gz
-   aws-sagemaker-remote model create --name pytorch-igniter-demo --model-artifact pytorch-igniter-demo/model.tar.gz --force
-   aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo --force
-   aws-sagemaker-remote endpoint create --config pytorch-igniter-demo --force
-   aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo
+   aws-sagemaker-remote model create --name pytorch-igniter-demo-local --model-artifact pytorch-igniter-demo/model.tar.gz --force
+   aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo-local --force
+   aws-sagemaker-remote endpoint create --config pytorch-igniter-demo-local --force
+   aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo-local
 
    # Invoke remote model
-   aws-sagemaker-remote endpoint invoke --name pytorch-igniter-demo --input test/test-image.png --output output/invoke-upload.json --output-type application/json
+   aws-sagemaker-remote endpoint invoke --name pytorch-igniter-demo-local --input test/test-image.png --output output/invoke-upload.json --output-type application/json
 
    # Clean up resources
-   aws-sagemaker-remote endpoint delete pytorch-igniter-demo
-   aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo
-   aws-sagemaker-remote model delete pytorch-igniter-demo
+   aws-sagemaker-remote endpoint delete pytorch-igniter-demo-local
+   aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo-local
+   aws-sagemaker-remote model delete pytorch-igniter-demo-local
 
 
 Remote usage
@@ -62,18 +62,18 @@ Remote usage
    pytorch-igniter-demo train-and-eval --sagemaker-run yes --input s3://sagemaker-us-east-1-683880991063/pytorch-igniter-demo-dataprep-2020-10-09-01-20-47-571/output/output
 
    # Deploy model
-   aws-sagemaker-remote model create --name pytorch-igniter-demo --job pytorch-igniter-demo...
-   aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo --force
-   aws-sagemaker-remote endpoint create --config pytorch-igniter-demo --force
-   aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo
+   aws-sagemaker-remote model create --name pytorch-igniter-demo-remote --job training-job-2020-10-12-08-06-48-401
+   aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo-remote --force
+   aws-sagemaker-remote endpoint create --config pytorch-igniter-demo-remote --force
+   aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo-remote
 
    # Invoke remote model
-   aws-sagemaker-remote endpoint invoke --name pytorch-igniter-demo --input test/test-image.png --output output/invoke-upload.json --output-type application/json
+   aws-sagemaker-remote endpoint invoke --name pytorch-igniter-demo-remote --input test/test-image.png --output output/invoke-upload.json --output-type application/json
 
    # Clean up resources
-   aws-sagemaker-remote endpoint delete pytorch-igniter-demo
-   aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo
-   aws-sagemaker-remote model delete pytorch-igniter-demo
+   aws-sagemaker-remote endpoint delete pytorch-igniter-demo-remote
+   aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo-remote
+   aws-sagemaker-remote model delete pytorch-igniter-demo-remote
 
    
 

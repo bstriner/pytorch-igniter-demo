@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torch
 import pytorch_igniter_demo
 import os
-from pytorch_igniter.spec import InferenceSpec
+from pytorch_igniter.spec import InferenceSpec, RunSpec
 from pytorch_igniter.inference.greyscale_image_input_fn import input_fn
 import pytorch_igniter
 import aws_sagemaker_remote
@@ -62,14 +62,19 @@ class Trainer(nn.Module):
         )
         self.criteria = CrossEntropyLoss()
         self.model = model
-        self.metrics = {
+        metrics = {
             'loss': 'loss',
             'accuracy': 'accuracy'
         }
-        self.loader = get_loader(
+        loader = get_loader(
             path=args.input,
             batch_size=args.train_batch_size,
             train=True
+        )
+        self.spec = RunSpec(
+            loader=loader,
+            metrics=metrics,
+            step=self.step
         )
 
     def step(self, engine, batch):
@@ -92,14 +97,19 @@ class Evaluator(object):
     def __init__(self, args, model):
         self.model = model
         self.criteria = CrossEntropyLoss()
-        self.metrics = {
+        metrics = {
             'loss': 'loss',
             'accuracy': 'accuracy'
         }
-        self.loader = get_loader(
+        loader = get_loader(
             path=args.input,
             batch_size=args.eval_batch_size,
             train=False
+        )
+        self.spec = RunSpec(
+            loader=loader,
+            metrics=metrics,
+            step=self.step
         )
 
     def step(self, engine, batch):
