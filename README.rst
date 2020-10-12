@@ -3,6 +3,11 @@ pytorch-igniter-demo
 
 Demo for `pytorch-igniter <https://pytorch-igniter.readthedocs.io/>`_
 
+* Write functions for creating a model, evaluation steps and training steps
+* ``pytorch-igniter`` generates a CLI for training, evaluation and inference
+* Logging, checkpointing, iterating, and other features handled automatically
+* Training generates a self-contained model package that can run inference
+
 Installation
 ++++++++++++++
 
@@ -21,9 +26,40 @@ GitHub
 
 View source code on `GitHub <https://github.com/bstriner/pytorch-igniter-demo>`_
 
+Training and Inference
+++++++++++++++++++++++
+
+Training generate self-contained models:
+
+* Local training generates a directory
+* SageMaker training automatically gzips that directory and uploads to S3
+
+A training package can be run locally using sagemaker libraries or uploaded to SageMaker to run remotely.
+
+* Model data like the neural network are stored in the gz
+* Directory ``code`` within the gz
+
+   + Placed on PYTHONPATH
+   + If it contains ``requirements.txt`` it is installed
+   + Module ``inference`` defines inference
+   + Depenencies are automatically uploaded
+   + Script copies its own source to ``code`` when saving a model
+
+The inference module defines how inference happens
+
+* ``model_fn`` loads your model when the endpoint starts
+* ``input_fn`` reads WAV, JPG, etc content from an HTTP request based on ``Content-Type`` headers
+* ``predict_fn`` runs your model
+* ``output_fn`` maps your predictions to HTTP responses based on ``Accept`` headers
+
+The model directory and inference module are created automatically based on an ``InferenceSpec`` that you define
+
+Locally or remotely trained models can be deployed locally or remotely.
+
+Use models by posting a file in an HTTP request with appropriate ``Content-Type`` and ``Accept`` headers.
 
 Local usage
-++++++++++++
+----------------
 
 .. code-block:: bash
 
@@ -31,27 +67,36 @@ Local usage
    pytorch-igniter-demo dataprep --output output/data
    pytorch-igniter-demo train-and-eval --input output/data
 
-   # Local inference
+   # Invoke local model
+   # Contents of directory is same as model.gz used for remote invocation
    aws-sagemaker-remote endpoint invoke --model-dir output/model --input test/test-image.png --output-type application/json --output output/invoke-local.json
 
-   # Upload local model
+   # Upload local model directory as a gzip
+   # If already gzipped, skip -gz flag
    aws-sagemaker-remote upload output/model pytorch-igniter-demo/model.tar.gz --gz
+   # Register SageMaker model from artifact
    aws-sagemaker-remote model create --name pytorch-igniter-demo-local --model-artifact pytorch-igniter-demo/model.tar.gz --force
+   # Create endpoint configuration
    aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo-local --force
+   # Create endpoint
+   # This launches servers, takes a while, and begins ongoing costs
    aws-sagemaker-remote endpoint create --config pytorch-igniter-demo-local --force
+   # Wait for the launch
    aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo-local
 
    # Invoke remote model
+   # Prefer using boto3 or other libraries to invoke endpoints directly in your own code
    aws-sagemaker-remote endpoint invoke --name pytorch-igniter-demo-local --input test/test-image.png --output output/invoke-upload.json --output-type application/json
 
    # Clean up resources
+   # Only the endpoint itself incurs any significant charges
    aws-sagemaker-remote endpoint delete pytorch-igniter-demo-local
    aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo-local
    aws-sagemaker-remote model delete pytorch-igniter-demo-local
 
 
 Remote usage
-++++++++++++
+---------------
 
 .. code-block:: bash
 
