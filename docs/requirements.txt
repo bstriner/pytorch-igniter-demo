@@ -1,5 +1,5 @@
 
-pytorch-ignite
+pytorch-igniter
 pyyaml
 mlflow
 sagemaker
@@ -10,3 +10,4 @@ sphinx
 aws-sagemaker-remote
 sphinx_rtd_theme
 sphinx-argparse
+pillow

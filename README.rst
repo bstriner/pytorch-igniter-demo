@@ -1,8 +1,7 @@
 pytorch-igniter-demo
 =====================
 
-Demo for pytorch-igniter
-
+Demo for `pytorch-igniter <https://pytorch-igniter.readthedocs.io/>`_
 
 Installation
 ++++++++++++++
