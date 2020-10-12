@@ -1,0 +1,12 @@
+
+pytorch-ignite
+pyyaml
+mlflow
+sagemaker
+tqdm
+torch
+torchvision
+sphinx
+aws-sagemaker-remote
+sphinx_rtd_theme
+sphinx-argparse
