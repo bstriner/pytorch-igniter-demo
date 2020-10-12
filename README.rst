@@ -3,6 +3,26 @@ pytorch-igniter-demo
 
 Demo for pytorch-igniter
 
+
+Installation
+++++++++++++++
+
+.. code-block:: bash
+
+  pip install git+https://github.com/bstriner/pytorch-igniter-demo.git
+
+Documentation
++++++++++++++++
+
+View latest documentation at `ReadTheDocs <https://pytorch-igniter-demo.readthedocs.io/>`_
+
+
+GitHub
++++++++++
+
+View source code on `GitHub <https://github.com/bstriner/pytorch-igniter-demo>`_
+
+
 Local usage
 ++++++++++++
 
