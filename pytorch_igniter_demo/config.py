@@ -29,6 +29,7 @@ def eval_args(parser):
 
 class Net(nn.Module):
     def __init__(self, args):
+        print("args.device: {}".format(args.device))
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
@@ -166,5 +167,6 @@ def make_config():
             ),
             inferencer=Inferencer,
             input_fn=input_fn
-        )
+        ),
+        max_epochs=5
     )

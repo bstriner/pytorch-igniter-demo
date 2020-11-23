@@ -29,7 +29,7 @@ View source code on `GitHub <https://github.com/bstriner/pytorch-igniter-demo>`_
 Training and Inference
 ++++++++++++++++++++++
 
-Training generate self-contained models:
+Training generates self-contained models:
 
 * Local training generates a directory
 * SageMaker training automatically gzips that directory and uploads to S3
@@ -63,8 +63,10 @@ Local usage
 
 .. code-block:: bash
 
-   # Local training
+   # Local dataprep
    pytorch-igniter-demo dataprep --output output/data
+
+   # Local training
    pytorch-igniter-demo train-and-eval --input output/data
 
    # Invoke local model
@@ -101,13 +103,13 @@ Remote usage
 .. code-block:: bash
 
    # Dataprep
-   pytorch-igniter-demo dataprep --sagemaker-run yes
+   pytorch-igniter-demo dataprep --sagemaker-run yes --sagemaker-output-json output/dataprep.json
 
    # Training
-   pytorch-igniter-demo train-and-eval --sagemaker-run yes --input s3://sagemaker-us-east-1-683880991063/pytorch-igniter-demo-dataprep-2020-10-09-01-20-47-571/output/output
+   pytorch-igniter-demo train-and-eval --sagemaker-run yes --input json://output/dataprep.json#ProcessingOutputConfig.Outputs.output.S3Output.S3Uri --sagemaker-output-json output/training.json
 
    # Deploy model
-   aws-sagemaker-remote model create --name pytorch-igniter-demo-remote --job training-job-2020-10-12-08-06-48-401
+   aws-sagemaker-remote model create --name pytorch-igniter-demo-remote --job json://output/training.json#TrainingJobName --force
    aws-sagemaker-remote endpoint-config create --model pytorch-igniter-demo-remote --force
    aws-sagemaker-remote endpoint create --config pytorch-igniter-demo-remote --force
    aws sagemaker wait endpoint-in-service --endpoint-name pytorch-igniter-demo-remote
@@ -120,6 +122,37 @@ Remote usage
    aws-sagemaker-remote endpoint-config delete pytorch-igniter-demo-remote
    aws-sagemaker-remote model delete pytorch-igniter-demo-remote
 
-   
 
-       
+Other things
+---------------
+
+.. code-block:: bash
+
+   # Dataprep help
+   pytorch-igniter-demo dataprep --help
+
+   # Training help
+   pytorch-igniter-demo train-and-eval --help
+
+   # Print fields from processing job JSON
+   aws-sagemaker-remote json read output/dataprep.json ProcessingOutputConfig.Outputs.output.S3Output.S3Uri
+
+   # Print fields from processing job from server
+   aws-sagemaker-remote processing describe json://output/dataprep.json#ProcessingJobName ProcessingJobStatus
+
+   # Print fields from training job JSON
+   aws-sagemaker-remote json read output/training.json TrainingJobName
+
+   # Print fields from training job from server
+   aws-sagemaker-remote training describe json://output/training.json#TrainingJobName TrainingJobStatus
+   aws-sagemaker-remote training describe json://output/training.json#TrainingJobName ModelArtifacts.S3ModelArtifacts
+   
+   # Check documentation on arguments to do things like change the instance, set runtime, etc.
+   # * ml.c5.xlarge
+   # * ml.p2.xlarge
+   # * ml.g4dn.xlarge
+   pytorch-igniter-demo train-and-eval \
+      --sagemaker-run yes \
+      --sagemaker-training-instance ml.c5.xlarge \
+      --input json://output/dataprep.json#ProcessingOutputConfig.Outputs.output.S3Output.S3Uri \
+      --output-json output/training.json
