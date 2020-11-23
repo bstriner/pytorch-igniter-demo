@@ -102,6 +102,11 @@ Remote usage
 
 .. code-block:: bash
 
+   # AWS profile
+   # Run `aws configure` to configure default profile
+   # Run `aws configure --profile [profile]` to configure named profile
+   # Add `--sagemaker-profile [profile]` to commands if not using default profile
+
    # Dataprep
    pytorch-igniter-demo dataprep --sagemaker-run yes --sagemaker-output-json output/dataprep.json
 
