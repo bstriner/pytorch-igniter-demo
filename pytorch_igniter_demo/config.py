@@ -14,20 +14,32 @@ import pytorch_igniter
 import aws_sagemaker_remote
 
 def model_args(parser):
+    """
+    Arguments used to build the model
+    """
     parser.add_argument('--classes', type=int, default=10)
 
 
 def train_args(parser):
+    """
+    Arguments specific to the trainer
+    """
     parser.add_argument('--learning-rate', type=float, default=1e-3)
     parser.add_argument('--weight-decay', type=float, default=1e-5)
     parser.add_argument('--train-batch-size', type=int, default=32)
 
 
 def eval_args(parser):
+    """
+    Arguments specific to the evaluator
+    """
     parser.add_argument('--eval-batch-size', type=int, default=32)
 
 
 class Net(nn.Module):
+    """
+    Model class
+    """
     def __init__(self, args):
         print("args.device: {}".format(args.device))
         super(Net, self).__init__()
@@ -55,6 +67,14 @@ class Net(nn.Module):
 
 
 class Trainer(nn.Module):
+    """
+    Create loader, step, and metrics for training
+
+    Engine:
+    - Iterates through loader
+    - Passes batches to the step function
+    - Calculate metrics using outputs of step function
+    """
     def __init__(self, args, model):
         super(Trainer, self).__init__()
         self.optimizer = Adam(
@@ -95,6 +115,9 @@ class Trainer(nn.Module):
 
 
 class Evaluator(object):
+    """
+    Create loader, step, and metrics for evaluation
+    """
     def __init__(self, args, model):
         self.model = model
         self.criteria = CrossEntropyLoss()
@@ -128,6 +151,9 @@ class Evaluator(object):
 
 
 class Inferencer(object):
+    """
+    Object deployed to SageMaker endpoint for inference
+    """
     def __init__(self, args):
         self.args = args
         self.model = Net(args)
@@ -145,6 +171,13 @@ class Inferencer(object):
 
 
 def make_config():
+    """
+    Build a configuration
+
+    - Model, training, and evaluation arguments and inputs
+    - Trainer, evaluator, and inferencer
+    - Additional defaults like number of epochs, save frequency, etc. (see docs)
+    """
     return IgniterConfig(
         model_args=model_args,
         train_args=train_args,

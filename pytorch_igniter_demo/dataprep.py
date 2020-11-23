@@ -40,10 +40,14 @@ def dataprep(args):
 class DataprepCommand(ProcessingCommand):
     def __init__(self, env=None):
         super(DataprepCommand, self).__init__(
-            help='Prepare dataset',
+            # Script to run command on SageMaker
             script=__file__,
+            # Help will display when running `pytorch-igniter-demo dataprep --help`
+            help='Prepare dataset',
+            # Define entrypoint for dataprep command
             main=dataprep,
             outputs={
+                # Define output names and default paths
                 'output': 'output/data'
             },
             dependencies={
@@ -51,7 +55,9 @@ class DataprepCommand(ProcessingCommand):
                 # module name: module path
                 'aws_sagemaker_remote': aws_sagemaker_remote
             },
+            # Add commands to configure container
             configuration_command='pip3 install --upgrade sagemaker sagemaker-experiments',
+            # Job name will show up in SageMaker processing tab
             base_job_name='pytorch-igniter-demo-dataprep',
             env=env
         )

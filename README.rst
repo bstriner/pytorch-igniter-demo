@@ -105,7 +105,7 @@ Remote usage
    # AWS profile
    # Run `aws configure` to configure default profile
    # Run `aws configure --profile [profile]` to configure named profile
-   # Add `--sagemaker-profile [profile]` to commands if not using default profile
+   # Add `--sagemaker-profile [profile]` (for `pytorch-igniter-demo` command) or `--profile [profile]` (for `aws-sagemaker-remote` command) if not using default profile
 
    # Dataprep
    pytorch-igniter-demo dataprep --sagemaker-run yes --sagemaker-output-json output/dataprep.json
@@ -143,7 +143,10 @@ Other things
    aws-sagemaker-remote json read output/dataprep.json ProcessingOutputConfig.Outputs.output.S3Output.S3Uri
 
    # Print fields from processing job from server
+   # Get name from JSON
    aws-sagemaker-remote processing describe json://output/dataprep.json#ProcessingJobName ProcessingJobStatus
+   # Pass name on command line
+   aws-sagemaker-remote processing describe my-job-12345 ProcessingJobStatus
 
    # Print fields from training job JSON
    aws-sagemaker-remote json read output/training.json TrainingJobName
