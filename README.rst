@@ -97,15 +97,36 @@ Local usage
    aws-sagemaker-remote model delete pytorch-igniter-demo-local
 
 
+
+AWS Configuration
+------------------
+
+Configure a default or named profile.
+
+- Make sure you set a default region such as ``us-east-1``
+- When viewing SageMaker console, make sure to select that region
+
+.. code-block:: bash
+
+   # Configure default AWS profile
+   aws configure
+   
+   # Configure AWS profile named PROFILE
+   aws configure --profile PROFILE
+
+   # If not using default profile:
+   # - Add `--sagemaker-profile [profile]` (for `pytorch-igniter-demo` command) 
+   # - Add `--profile [profile]` (for `aws-sagemaker-remote` command)
+   # e.g.
+   pytorch-igniter-demo dataprep --sagemaker-profile PROFILE ...
+   aws-sagemaker-remote --profile PROFILE endpoint invoke ...
+
+
+
 Remote usage
 ---------------
 
 .. code-block:: bash
-
-   # AWS profile
-   # Run `aws configure` to configure default profile
-   # Run `aws configure --profile [profile]` to configure named profile
-   # Add `--sagemaker-profile [profile]` (for `pytorch-igniter-demo` command) or `--profile [profile]` (for `aws-sagemaker-remote` command) if not using default profile
 
    # Dataprep
    pytorch-igniter-demo dataprep --sagemaker-run yes --sagemaker-output-json output/dataprep.json
@@ -164,3 +185,10 @@ Other things
       --sagemaker-training-instance ml.c5.xlarge \
       --input json://output/dataprep.json#ProcessingOutputConfig.Outputs.output.S3Output.S3Uri \
       --output-json output/training.json
+
+SageMaker Console
+------------------
+
+View status and results of processing and trainin in the AWS SageMaker console
+
+Make sure you select the region matching the profile you use.
