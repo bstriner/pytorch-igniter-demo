@@ -1,4 +1,4 @@
-pytorch-igniter==0.0.42
-aws-sagemaker-remote==0.0.48
+pytorch-igniter==0.0.47
+aws-sagemaker-remote==0.0.63
 pytorch-ignite==0.4.2
 pillow

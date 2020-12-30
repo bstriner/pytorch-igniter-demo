@@ -132,7 +132,7 @@ Remote usage
    pytorch-igniter-demo dataprep --sagemaker-run yes --sagemaker-output-json output/dataprep.json
 
    # Training
-   pytorch-igniter-demo train-and-eval --sagemaker-run yes --input json://output/dataprep.json#ProcessingOutputConfig.Outputs.output.S3Output.S3Uri --sagemaker-output-json output/training.json
+   pytorch-igniter-demo train-and-eval --sagemaker-run yes --input output/dataprep.json,json:ProcessingOutputConfig.Outputs.output.S3Output.S3Uri --sagemaker-output-json output/training.json --eval-pbar no --train-pbar no
 
    # Deploy model
    aws-sagemaker-remote model create --name pytorch-igniter-demo-remote --job json://output/training.json#TrainingJobName --force
